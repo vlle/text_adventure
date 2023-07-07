@@ -1,15 +1,18 @@
 package server
 
 import (
+	"encoding/json"
 	"net/http"
-  "github.com/vlle/text_adventure/restful_db/internal/services"
-  "encoding/json"
+
+	"github.com/go-chi/chi/v5"
+	"github.com/vlle/text_adventure/restful_db/internal/services"
 )
 
 func GetItem (w http.ResponseWriter, r *http.Request) {
-    item, err := services.GetItem("Key")
+    item_title := chi.URLParam(r, "key")
+    item, err := services.GetItem(item_title)
     if err != nil {
-      http.Error(w, err.Error(), http.StatusInternalServerError)
+      http.Error(w, http.StatusText(422), 422)
       return 
     }
     json_item, err := json.Marshal(item)

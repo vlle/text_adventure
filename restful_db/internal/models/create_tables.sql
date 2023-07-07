@@ -20,16 +20,16 @@ CREATE TABLE IF NOT EXISTS p_user (
 
 
 INSERT INTO image (name, emoji) VALUES
-('Bug', '🐛'),
-('Dragon', '🐉'),
-('Ghost', '👻'),
-('Alien', '👽'),
-('Robot', '🤖'),
-('Monster', '👾'),
-('Key', '🔑'),
-('Door', '🚪'),
-('Bed', '🛏️'),
-('Detective', '🕵️‍♂️');
+('bug', '🐛'),
+('dragon', '🐉'),
+('ghost', '👻'),
+('alien', '👽'),
+('robot', '🤖'),
+('monster', '👾'),
+('key', '🔑'),
+('door', '🚪'),
+('bed', '🛏️'),
+('detective', '🕵️‍♂️');
 
 
 CREATE TABLE IF NOT EXISTS location (
