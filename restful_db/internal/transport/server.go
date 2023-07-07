@@ -10,6 +10,9 @@ import (
 
 func GetItem (w http.ResponseWriter, r *http.Request) {
     item_title := chi.URLParam(r, "key")
+    if item_title == "" {
+      http.Error(w, http.StatusText(404), 404)
+    }
     item, err := services.GetItem(item_title)
     if err != nil {
       http.Error(w, http.StatusText(422), 422)
