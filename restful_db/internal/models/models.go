@@ -20,7 +20,6 @@ type Point struct {
   Y int
 }
 
-
 type Item struct {
   Id          int
   Title       string

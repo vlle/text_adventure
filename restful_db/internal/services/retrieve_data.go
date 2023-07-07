@@ -8,9 +8,14 @@ import (
 
 func GetItem(name string) (models.Item, error) {
   dbpool, err := database.ConnectDatabase()
-  item := database.SelectItem(name)
   if err != nil {
     return models.Item{}, err
   }
-  return models.Item{}, nil
+
+  item, err := database.SelectItem(dbpool, name)
+  if err != nil {
+    return models.Item{}, err
+  }
+
+  return item, nil
 }
