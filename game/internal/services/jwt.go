@@ -1,4 +1,4 @@
-package game_logic
+package jwt
 
 import (
   "github.com/golang-jwt/jwt/v5"
@@ -45,8 +45,4 @@ func DecodeToken(token string) string {
     fmt.Println(err)
     return ""
   }
-}
-
-func SignupUser() {
-
 }

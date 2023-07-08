@@ -1,4 +1,4 @@
-package game_logic
+package jwt
 
 import (
   "github.com/golang-jwt/jwt/v5"
@@ -14,7 +14,7 @@ func GenerateToken(id int) string {
   )
   
   str_id := strconv.Itoa(123)
-  key = []byte(os.Getenv("key"))  /* Load key from somewhere, for example an environment variable */
+  key = []byte(os.Getenv("key"))
   t = jwt.NewWithClaims(jwt.SigningMethodHS256,
   jwt.MapClaims{ 
     "iss": "vlle_game", 
@@ -45,8 +45,4 @@ func DecodeToken(token string) string {
     fmt.Println(err)
     return ""
   }
-}
-
-func SignupUser() {
-
 }
