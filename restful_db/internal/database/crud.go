@@ -49,7 +49,7 @@ func SelectLocation(conn *pgxpool.Pool, id int) (models.Location, error) {
 
 func SelectMonster(conn *pgxpool.Pool, id int) (models.Monster, error) {
   var m models.Monster
-  query := "SELECT id, name, description, coalesce(image_id, -1), coalesce(location_id, -1) FROM monster WHERE id = $1"
+  query := "SELECT id, name, description, image_id FROM monster WHERE id = $1"
   err := conn.QueryRow(context.Background(), query , id).Scan(&m.ID, &m.Title, &m.Description, &m.ImageID)
   if err != nil {
     fmt.Fprintf(os.Stderr, "SelectMonster.Error: %v\n", err)

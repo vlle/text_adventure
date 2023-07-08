@@ -21,16 +21,18 @@ func RouteMonster(r chi.Router) {
   r.Get("/{monster_id}", server.GetMonster)
   // r.Post("/", server.CreateMonster)
 }
-// 
-// func RouteUser(r chi.Router) {
-//   r.Get("/{user_id}", server.GetUser)
-//   // r.Post("/", server.CreatePlayer)
-// }
+
+func RouteUser(r chi.Router) {
+  r.Get("/{user_id}", server.GetUser)
+  // r.Post("/", server.CreatePlayer)
+}
 
 func LaunchServer() {
   r := chi.NewRouter()
   r.Use(middleware.Logger)
   r.Route("/item", RouteItem)
   r.Route("/location", RouteLocation)
+  r.Route("/user", RouteUser)
+  r.Route("/monster", RouteMonster)
   http.ListenAndServe(":3000", r)
 }

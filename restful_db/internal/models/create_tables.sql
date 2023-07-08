@@ -88,10 +88,10 @@ CREATE TABLE IF NOT EXISTS monster (
   fight_power integer not null,
   armor      integer not null,
   location_id integer references location(id),
-  image_id    integer references image(id),
+  image_id    integer references image(id)
 );
 
-INSERT INTO monster (id, name, description, hp, fight_power, armor, location_id, image_id) VALUES
+INSERT INTO monster (id, name, hp, fight_power, armor, description, location_id, image_id) VALUES
 (1, 'Sleeping zombie',  10, 3, 0, 'It is sleeping, do not wake it up', 1, 12),
 (2, 'Sleeping zombie',  10, 3, 0, 'It is sleeping, do not wake it up', 1, 12),
-(3, 'Sleeping zombie',  10, 3, 0, 'It is sleeping, do not wake it up', 1, 12),
+(3, 'Sleeping zombie',  10, 3, 0, 'It is sleeping, do not wake it up', 1, 12);
