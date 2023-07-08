@@ -42,3 +42,41 @@ func GetLocation(w http.ResponseWriter, r *http.Request) {
   }
   w.Write(json_location)
 }
+
+func GetMonster(w http.ResponseWriter, r *http.Request) {
+  id := chi.URLParam(r, "monster_id")
+  i, error := strconv.Atoi(id)
+  if error != nil {
+      panic(error)
+  }
+  monster, err := services.GetMonster(i)
+  if err.E != nil {
+    http.Error(w, http.StatusText(err.ProposedHttpCode()), err.ProposedHttpCode())
+    return 
+  }
+  json_monster, error := json.Marshal(monster)
+  if error != nil {
+    http.Error(w, err.Error(), http.StatusInternalServerError)
+    return
+  }
+  w.Write(json_monster)
+}
+
+func GetUser(w http.ResponseWriter, r *http.Request) {
+  id := chi.URLParam(r, "user_id")
+  i, error := strconv.Atoi(id)
+  if error != nil {
+      panic(error)
+  }
+  user, err := services.GetUser(i)
+  if err.E != nil {
+    http.Error(w, http.StatusText(err.ProposedHttpCode()), err.ProposedHttpCode())
+    return 
+  }
+  json_user, error := json.Marshal(user)
+  if error != nil {
+    http.Error(w, err.Error(), http.StatusInternalServerError)
+    return
+  }
+  w.Write(json_user)
+}

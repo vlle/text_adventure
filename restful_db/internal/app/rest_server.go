@@ -17,10 +17,10 @@ func RouteLocation(r chi.Router) {
   // r.Post("/", server.CreateLocation)
 }
 
-// func RouteMonster(r chi.Router) {
-//   r.Get("/{monster_id}", server.GetMonster)
-//   // r.Post("/", server.CreateMonster)
-// }
+func RouteMonster(r chi.Router) {
+  r.Get("/{monster_id}", server.GetMonster)
+  // r.Post("/", server.CreateMonster)
+}
 // 
 // func RouteUser(r chi.Router) {
 //   r.Get("/{user_id}", server.GetUser)
