@@ -1,30 +1,42 @@
 package app_game
 
 import (
-  "net/http"
-  "os"
+	"net/http"
+	"os"
+  "io"
+  "encoding/json"
+  "fmt"
+
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
-  // "github.com/vlle/text_adventure/game/game_logic"
+	// "github.com/vlle/text_adventure/game/game_logic"
 )
 
 func RouteGame(r chi.Router) {
-  // send post query to another http
 
   newUrl := os.Getenv("REST_URL")
   if newUrl == "" {
     newUrl = "http://127.0.0.1:3000/"
   }
-  // redirect post request to another http
 
   r.Post("/signup", func(w http.ResponseWriter, r *http.Request) {
-    _, err := http.Post(newUrl + "user/signup", "application/json", r.Body)
+    resp, err := http.Post(newUrl + "user/signup", "application/json", r.Body)
     if err != nil {
       http.Error(w, err.Error(), http.StatusInternalServerError)
       return
     }
-    //defer resp.Body.Close()
-    w.Write([]byte("user created"))
+    defer resp.Body.Close()
+
+    w.Header().Set("Content-Type", resp.Header.Get("Content-Type"))
+    w.Header().Set("Content-Length", resp.Header.Get("Content-Length"))
+    w.WriteHeader(resp.StatusCode)
+
+    //decode json response id
+
+    io.Copy(w, resp.Body)
+    var user_id int
+    json.NewDecoder(resp.Body).Decode(&user_id)
+    fmt.Println(user_id)
   })
 
 

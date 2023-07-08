@@ -71,7 +71,7 @@ func SelectImage(conn *pgxpool.Pool, id int) (models.Image, error) {
 
 func SelectUser(conn *pgxpool.Pool, id int) (models.User, error) {
   var u models.User
-  query := "SELECT id, name, coalesce(image_id, -1), location_id FROM user WHERE id = $1"
+  query := "SELECT id, name, coalesce(image_id, -1), location_id FROM p_user WHERE id = $1"
   err := conn.QueryRow(context.Background(), query , id).Scan(&u.ID, &u.Name, &u.ImageID, &u.LocationID)
   if err != nil {
     fmt.Fprintf(os.Stderr, "SelectUser.Error: %v\n", err)
@@ -87,7 +87,7 @@ func InsertUser(conn *pgxpool.Pool, name string, image_id int, location_id int) 
   if location_id <= 0 {
     location_id = 5 // starting_location = '🪨'
   }
-  query := "INSERT INTO user (name, image_id, location_id) VALUES ($1, $2, $3) RETURNING id"
+  query := "INSERT INTO p_user (name, image_id, location_id) VALUES ($1, $2, $3) RETURNING id"
   var id int
   err := conn.QueryRow(context.Background(), query , name, image_id, location_id).Scan(&id)
   if err != nil {
