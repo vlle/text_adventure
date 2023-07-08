@@ -85,14 +85,18 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 func PostUser(w http.ResponseWriter, r *http.Request) {
   
   // get "name" from request body
-  var n struct { name string }
+  var n struct {
+    name string 
+    pass string 
+  }
   error := json.NewDecoder(r.Body).Decode(&n)
   Name := n.name
+  Password := n.pass
   if error != nil {
     fmt.Println(error)
     panic(error)
   }
-  id, err := services.CreateUser(Name, -1, -1)
+  id, err := services.CreateUser(Name, Password, -1, -1)
   if err.E != nil {
     http.Error(w, http.StatusText(err.ProposedHttpCode()), err.ProposedHttpCode())
     return 

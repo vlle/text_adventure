@@ -92,14 +92,14 @@ func GetUser(id int) (models.User, SerivceError) {
   return user, SerivceError{}
 }
 
-func CreateUser(name string, img_id int, location_id int) (int, SerivceError) {
+func CreateUser(name string, password string, img_id int, location_id int) (int, SerivceError) {
   dbpool, err := database.ConnectDatabase()
   if err != nil {
     log.Println(err)
     return -1, SerivceError{E: err, ProposedCode: 503} 
   }
 
-  id, err := database.InsertUser(dbpool, name, img_id, location_id)
+  id, err := database.InsertUser(dbpool, name, password, img_id, location_id)
   if err != nil {
     log.Println(err)
     return -1, SerivceError{E: err, ProposedCode: 500}
