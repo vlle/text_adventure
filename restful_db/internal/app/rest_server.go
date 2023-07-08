@@ -23,8 +23,8 @@ func RouteMonster(r chi.Router) {
 }
 
 func RouteUser(r chi.Router) {
+  r.Post("/signup", server.PostUser)
   r.Get("/{user_id}", server.GetUser)
-  // r.Post("/", server.CreatePlayer)
 }
 
 func LaunchServer() {

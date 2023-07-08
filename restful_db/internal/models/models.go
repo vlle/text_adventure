@@ -23,7 +23,6 @@ type Location struct {
 type User struct {
   ID int
   Name string
-  Password string
 
   ImageID int
   LocationID int

@@ -20,7 +20,9 @@ CREATE TABLE IF NOT EXISTS p_user (
   hp         integer not null,
   fight_power integer not null,
   armor      integer not null,
-  image_id   integer references image(id)
+
+  image_id   integer references image(id),
+  location_id integer references location(id)
 );
 
 CREATE TABLE IF NOT EXISTS user_item (
@@ -84,9 +86,11 @@ CREATE TABLE IF NOT EXISTS monster (
   id         serial primary key,
   name       varchar(50) not null,
   description varchar(50) not null,
+
   hp         integer not null,
   fight_power integer not null,
   armor      integer not null,
+
   location_id integer references location(id),
   image_id    integer references image(id)
 );

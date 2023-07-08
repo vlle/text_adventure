@@ -79,3 +79,31 @@ func SelectUser(conn *pgxpool.Pool, id int) (models.User, error) {
   }
   return u, nil
 }
+
+func InsertUser(conn *pgxpool.Pool, name string, image_id int, location_id int) (int, error) {
+  if image_id <= 0 {
+    image_id = 11 // default image = '🕵️‍♂️'
+  }
+  if location_id <= 0 {
+    location_id = 5 // starting_location = '🪨'
+  }
+  query := "INSERT INTO user (name, image_id, location_id) VALUES ($1, $2, $3) RETURNING id"
+  var id int
+  err := conn.QueryRow(context.Background(), query , name, image_id, location_id).Scan(&id)
+  if err != nil {
+    fmt.Fprintf(os.Stderr, "InsertUser.Error: %v\n", err)
+    return id, err
+  }
+  return id, nil
+}
+
+func UpdateUserLocation(conn *pgxpool.Pool, user_id int, location_id int) (models.User, error) {
+  var u models.User
+  query := "UPDATE user SET location_id = $1 WHERE id = $2 RETURNING id, name, coalesce(image_id, -1), coalesce(location_id, -1)"
+  err := conn.QueryRow(context.Background(), query , location_id, user_id).Scan(&u.ID, &u.Name, &u.ImageID, &u.LocationID)
+  if err != nil {
+    fmt.Fprintf(os.Stderr, "UpdateUserLocation.Error: %v\n", err)
+    return u, err
+  }
+  return u, nil
+}

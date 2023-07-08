@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
   "strconv"
+  "fmt"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/vlle/text_adventure/restful_db/internal/services"
@@ -79,4 +80,23 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
     return
   }
   w.Write(json_user)
+}
+
+func PostUser(w http.ResponseWriter, r *http.Request) {
+  
+  // get "name" from request body
+  var n struct { name string }
+  error := json.NewDecoder(r.Body).Decode(&n)
+  Name := n.name
+  if error != nil {
+    fmt.Println(error)
+    panic(error)
+  }
+  id, err := services.CreateUser(Name, -1, -1)
+  if err.E != nil {
+    http.Error(w, http.StatusText(err.ProposedHttpCode()), err.ProposedHttpCode())
+    return 
+  }
+  w.WriteHeader(http.StatusCreated)
+  json.NewEncoder(w).Encode(id)
 }
