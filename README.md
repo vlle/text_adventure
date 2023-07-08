@@ -1,10 +1,14 @@
 ## Text-adventure game with HTTP requests based controls
 
+![fantasy basement](img/fantasy_basement.jpeg)) 
+
 ### Description:
 
 You found yourself in a dark, dirty room. You don't remember how you got here. You don't remember anything at all. You don't even remember your name. Try to a escape.
 
 Note: for best expirience do not view database files from repo. They contain spoilers (kinda).
+
+### Status: in development
 
 ## How to play
 
