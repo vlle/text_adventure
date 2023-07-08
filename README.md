@@ -1,6 +1,6 @@
 ## Text-adventure game with HTTP requests based controls
 
-![fantasy basement](img/fantasy_basement.jpeg)) 
+![fantasy basement](img/fantasy-basement.jpeg?raw=true)
 
 ### Description:
 
