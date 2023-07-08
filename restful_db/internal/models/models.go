@@ -1,18 +1,10 @@
 package models
 
 type Image struct {
-  id int
-  name string
-  url string
-  emoji string
-}
-
-
-type User struct {
-  id int
-  name string
-  password string
-  image_id int
+  ID int
+  Name string
+  Url string
+  Emoji string
 }
 
 type Point struct {
@@ -20,26 +12,35 @@ type Point struct {
   Y int
 }
 
-type Item struct {
-  Id          int
-  Title       string
+type Location struct {
+  ID int
+  Title string
+  XY Point
   Description string
-  Xy          Point
-  Image_id    int
+  ImageID int
 }
 
-type Location struct {
-  id int
-  title string
-  description string
-  xy Point
-  image_id int
+type User struct {
+  ID int
+  Name string
+  Password string
+
+  ImageID int
+  LocationID int
+}
+
+type Item struct {
+  ID          int
+  Title       string
+  Description string
+  LocationID int
+  ImageID    int
 }
 
 type Monster struct {
-  id int
-  title string
-  description string
-  xy Point
-  image_id int
+  ID int
+  Title string
+  Description string
+  LocationID int
+  ImageID int
 }
