@@ -3,23 +3,27 @@ package app_game
 import (
 	"net/http"
 	"os"
-  "io"
-  "encoding/json"
   "fmt"
+  // "io"
+  "encoding/json"
+
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
-	// "github.com/vlle/text_adventure/game/game_logic"
+	"github.com/vlle/text_adventure/game/internal/utils"
 )
 
-func RouteGame(r chi.Router) {
+type TokenStruct struct {
+  Token string `json:"jwt_token"`
+}
 
-  newUrl := os.Getenv("REST_URL")
-  if newUrl == "" {
-    newUrl = "http://127.0.0.1:3000/"
-  }
+func signup(w http.ResponseWriter, r *http.Request) {
 
-  r.Post("/signup", func(w http.ResponseWriter, r *http.Request) {
+    newUrl := os.Getenv("REST_URL")
+    if newUrl == "" {
+      newUrl = "http://127.0.0.1:3000/"
+    }
+
     resp, err := http.Post(newUrl + "user/signup", "application/json", r.Body)
     if err != nil {
       http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -27,22 +31,53 @@ func RouteGame(r chi.Router) {
     }
     defer resp.Body.Close()
 
-    w.Header().Set("Content-Type", resp.Header.Get("Content-Type"))
-    w.Header().Set("Content-Length", resp.Header.Get("Content-Length"))
-    w.WriteHeader(resp.StatusCode)
-
-    //decode json response id
-
-    io.Copy(w, resp.Body)
     var user_id int
     json.NewDecoder(resp.Body).Decode(&user_id)
     fmt.Println(user_id)
-  })
+
+    token := jwt.GenerateToken(user_id)
+    t := TokenStruct{Token: token}
+    fmt.Println(token)
+
+    w.Header().Set("Content-Type", "application/json")
+    json.NewEncoder(w).Encode(t)
+}
+
+func login(w http.ResponseWriter, r *http.Request) {
+  newUrl := os.Getenv("REST_URL")
+  if newUrl == "" {
+    newUrl = "http://127.0.0.1:3000/"
+  }
+
+  resp, err := http.Post(newUrl + "user/login", "application/json", r.Body)
+  if err != nil {
+    http.Error(w, err.Error(), http.StatusInternalServerError)
+    return
+  }
+  if resp.StatusCode != 200 {
+    http.Error(w, "Invalid credentials", http.StatusUnauthorized)
+    return
+  }
+  defer resp.Body.Close()
+
+  var user_id int
+  json.NewDecoder(resp.Body).Decode(&user_id)
+
+  token := jwt.GenerateToken(user_id)
+  t := TokenStruct{Token: token}
+
+  w.Header().Set("Content-Type", "application/json")
+  json.NewEncoder(w).Encode(t)
+}
 
 
-  r.Get("/login", func(w http.ResponseWriter, r *http.Request) {
-    w.Write([]byte("login"))
-  })
+func RouteGame(r chi.Router) {
+
+
+  r.Post("/signup", signup)
+
+
+  r.Post("/login", login)
   r.Get("/whereami", func(w http.ResponseWriter, r *http.Request) {
     w.Write([]byte("you are in the game"))
   })

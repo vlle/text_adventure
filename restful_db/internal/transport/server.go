@@ -4,7 +4,8 @@ import (
 	"encoding/json"
 	"net/http"
   "strconv"
-  "fmt"
+  //"fmt"
+  // "log"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/vlle/text_adventure/restful_db/internal/services"
@@ -84,23 +85,46 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 
 func PostUser(w http.ResponseWriter, r *http.Request) {
   
-  // get "name" from request body
-  var n struct {
-    name string 
-    pass string 
+  var N struct {
+    Name string 
+    Password string 
   }
-  error := json.NewDecoder(r.Body).Decode(&n)
-  Name := n.name
-  Password := n.pass
+  // bytes := make([]byte, 128)
+  // r.Body.Read(bytes)
+  decoder := json.NewDecoder(r.Body)
+  error := decoder.Decode(&N)
   if error != nil {
-    fmt.Println(error)
-    panic(error)
+      panic(error)
   }
+  Name := N.Name
+  Password := N.Password
   id, err := services.CreateUser(Name, Password, -1, -1)
   if err.E != nil {
     http.Error(w, http.StatusText(err.ProposedHttpCode()), err.ProposedHttpCode())
     return 
   }
+
   w.WriteHeader(http.StatusCreated)
+  json.NewEncoder(w).Encode(id)
+}
+
+
+func LoginUser(w http.ResponseWriter, r *http.Request) {
+  
+  var N struct {
+    Name string 
+    Password string 
+  }
+  decoder := json.NewDecoder(r.Body)
+  error := decoder.Decode(&N)
+  if error != nil {
+      panic(error)
+  }
+  id, err := services.LoginUser(N.Name, N.Password)
+  if err.E != nil {
+    http.Error(w, http.StatusText(err.ProposedHttpCode()), err.ProposedHttpCode())
+    return 
+  }
+
   json.NewEncoder(w).Encode(id)
 }

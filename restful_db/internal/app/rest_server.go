@@ -24,6 +24,7 @@ func RouteMonster(r chi.Router) {
 
 func RouteUser(r chi.Router) {
   r.Post("/signup", server.PostUser)
+  r.Post("/login", server.LoginUser)
   r.Get("/{user_id}", server.GetUser)
 }
 

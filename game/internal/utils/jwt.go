@@ -4,7 +4,7 @@ import (
   "github.com/golang-jwt/jwt/v5"
   "os"
   "fmt"
-  "strconv"
+  // "strconv"
 )
 
 func GenerateToken(id int) string {
@@ -13,12 +13,11 @@ func GenerateToken(id int) string {
     t   *jwt.Token
   )
   
-  str_id := strconv.Itoa(123)
   key = []byte(os.Getenv("key"))
   t = jwt.NewWithClaims(jwt.SigningMethodHS256,
   jwt.MapClaims{ 
     "iss": "vlle_game", 
-    "sub": str_id, 
+    "sub": id, 
   })
   s, err := t.SignedString(key)
   if err != nil {

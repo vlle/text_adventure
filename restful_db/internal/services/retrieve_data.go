@@ -3,7 +3,10 @@ package services
 import (
   "github.com/vlle/text_adventure/restful_db/internal/database"
   "github.com/vlle/text_adventure/restful_db/internal/models"
+  "golang.org/x/crypto/bcrypt"
   "log"
+  "fmt"
+  "os"
 )
 
 type SerivceError struct {
@@ -99,10 +102,42 @@ func CreateUser(name string, password string, img_id int, location_id int) (int,
     return -1, SerivceError{E: err, ProposedCode: 503} 
   }
 
-  id, err := database.InsertUser(dbpool, name, password, img_id, location_id)
+  bytes, crypt_err := bcrypt.GenerateFromPassword([]byte(password), 10)
+  hash := string(bytes)
+  if crypt_err != nil {
+    fmt.Fprintf(os.Stderr, "InsertUser.Error: %v\n", crypt_err)
+    return 0, SerivceError{E: crypt_err, ProposedCode: 500}
+  }
+
+  id, err := database.InsertUser(dbpool, name, hash, img_id, location_id)
   if err != nil {
     log.Println(err)
     return -1, SerivceError{E: err, ProposedCode: 500}
   }
   return id, SerivceError{}
 }
+
+func LoginUser(name string, password string) (models.User, SerivceError) {
+  dbpool, err := database.ConnectDatabase()
+  if err != nil {
+    log.Println(err)
+    return models.User{}, SerivceError{E: err, ProposedCode: 503} 
+  }
+
+  user, err := database.SelectUserByName(dbpool, name)
+  if err != nil {
+    log.Println(err)
+    if err.Error() == "no rows in result set" {
+     return models.User{}, SerivceError{E: err, ProposedCode: 404}
+    }
+    return models.User{}, SerivceError{E: err, ProposedCode: 500}
+  }
+
+  err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+  if err != nil {
+    fmt.Fprintf(os.Stderr, "LoginUser.Error: %v\n", err)
+    return models.User{}, SerivceError{E: err, ProposedCode: 401}
+  }
+  return user, SerivceError{}
+}
+

@@ -5,7 +5,6 @@ import (
   "context"
   "fmt"
   "os"
-  "golang.org/x/crypto/bcrypt"
   "github.com/jackc/pgx/v5/pgxpool"
   "github.com/vlle/text_adventure/restful_db/internal/models"
 )
@@ -80,6 +79,18 @@ func SelectUser(conn *pgxpool.Pool, id int) (models.User, error) {
   return u, nil
 }
 
+
+func SelectUserByName(conn *pgxpool.Pool, name string) (models.User, error) {
+  var u models.User
+  query := "SELECT id, name, password, coalesce(image_id, -1), location_id FROM p_user WHERE name = $1"
+  err := conn.QueryRow(context.Background(), query, name).Scan(&u.ID, &u.Name, &u.Password, &u.ImageID, &u.LocationID)
+  if err != nil {
+    fmt.Fprintf(os.Stderr, "SelectUserByName.Error: %v\n", err)
+    return u, err
+  }
+  return u, nil
+}
+
 func InsertUser(conn *pgxpool.Pool, name string, password string, image_id int, location_id int) (int, error) {
   if image_id <= 0 {
     image_id = 11 // default image = '🕵️‍♂️'
@@ -88,16 +99,10 @@ func InsertUser(conn *pgxpool.Pool, name string, password string, image_id int, 
     location_id = 5 // starting_location = '🪨'
   }
 
-  bytes, crypt_err := bcrypt.GenerateFromPassword([]byte(password), 10)
-  hash := string(bytes)
-  if crypt_err != nil {
-    fmt.Fprintf(os.Stderr, "InsertUser.Error: %v\n", crypt_err)
-    return 0, crypt_err
-  }
 
   query := "INSERT INTO p_user (name, password, hp, armor, fight_power, image_id, location_id) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id"
   var id int
-  err := conn.QueryRow(context.Background(), query, name, hash, 100, 0, 1, image_id, location_id).Scan(&id)
+  err := conn.QueryRow(context.Background(), query, name, password, 100, 0, 1, image_id, location_id).Scan(&id)
   if err != nil {
     fmt.Fprintf(os.Stderr, "InsertUser.Error: %v\n", err)
     return id, err

@@ -23,6 +23,7 @@ type Location struct {
 type User struct {
   ID int `json:"id"`
   Name string `json:"name"`
+  Password string `json:"password"`
 
   ImageID int `json:"image_id"`
   LocationID int `json:"location_id"`
