@@ -1,12 +1,13 @@
 package services
 
 import (
-  "github.com/vlle/text_adventure/restful_db/internal/database"
-  "github.com/vlle/text_adventure/restful_db/internal/models"
-  "golang.org/x/crypto/bcrypt"
-  "log"
-  "fmt"
-  "os"
+	"fmt"
+	"log"
+	"os"
+
+	"github.com/vlle/text_adventure/restful_db/internal/database"
+	"github.com/vlle/text_adventure/restful_db/internal/models"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type SerivceError struct {
@@ -58,6 +59,25 @@ func GetLocation(id int) (models.Location, SerivceError) {
   }
   return location, SerivceError{}
 }
+
+func GetLocations() ([]models.Location, SerivceError) {
+  dbpool, err := database.ConnectDatabase()
+  if err != nil {
+    log.Println(err)
+    return []models.Location{}, SerivceError{E: err, ProposedCode: 503} 
+  }
+
+  locations, err := database.SelectLocations(dbpool)
+  if err != nil {
+    log.Println(err)
+    if err.Error() == "no rows in result set" {
+     return []models.Location{}, SerivceError{E: err, ProposedCode: 404}
+    }
+    return []models.Location{}, SerivceError{E: err, ProposedCode: 500}
+  }
+  return locations, SerivceError{}
+}
+
 
 func GetMonster(id int) (models.Monster, SerivceError) {
   dbpool, err := database.ConnectDatabase()
@@ -140,4 +160,3 @@ func LoginUser(name string, password string) (models.User, SerivceError) {
   }
   return user, SerivceError{}
 }
-

@@ -1,12 +1,14 @@
-// database 
+// database
 package database
 
 import (
-  "context"
-  "fmt"
-  "os"
-  "github.com/jackc/pgx/v5/pgxpool"
-  "github.com/vlle/text_adventure/restful_db/internal/models"
+	"context"
+	"fmt"
+	"os"
+
+	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/jackc/pgx/v5/pgtype"
+	"github.com/vlle/text_adventure/restful_db/internal/models"
 )
 
 func ConnectDatabase() (*pgxpool.Pool, error) {
@@ -44,6 +46,30 @@ func SelectLocation(conn *pgxpool.Pool, id int) (models.Location, error) {
     return l, err
   }
   return l, nil
+}
+
+func SelectLocations(conn *pgxpool.Pool) ([]models.Location, error) {
+  var locations []models.Location
+  var point pgtype.Point
+  query := "SELECT id, title, description, coalesce(image_id, -1), xy FROM location"
+  rows, err := conn.Query(context.Background(), query)
+  if err != nil {
+    fmt.Fprintf(os.Stderr, "SelectLocations.Error: %v\n", err)
+    return locations, err
+  }
+  defer rows.Close()
+  for rows.Next() {
+    var l models.Location
+    err := rows.Scan(&l.ID, &l.Title, &l.Description, &l.ImageID, &point)
+    l.XY.X = int(point.P.X)
+    l.XY.Y = int(point.P.Y)
+    if err != nil {
+      fmt.Fprintf(os.Stderr, "SelectLocations.Error: %v\n", err)
+      return locations, err
+    }
+    locations = append(locations, l)
+  }
+  return locations, nil
 }
 
 func SelectMonster(conn *pgxpool.Pool, id int) (models.Monster, error) {

@@ -3,6 +3,7 @@
 -- # # #
 -- # # #
 
+
 CREATE TABLE IF NOT EXISTS image (
   id         serial primary key,
   name       varchar(50) not null,
@@ -50,6 +51,7 @@ CREATE TABLE IF NOT EXISTS user_item (
 );
 
 
+
 INSERT INTO image (id, name, emoji) VALUES
 (1, 'bug', '🐛'),
 (2, 'dragon', '🐉'),
@@ -79,6 +81,7 @@ INSERT INTO location (id, title, image_id, description, xy) VALUES
 (7, 'Stone floor', 10, 'This is cold, dirty stone floor. You do not like it.', point(2,0)),
 (8, 'Bed', 9, 'Very worn-out bed with blood stains on it. But there is no other bed, so..', point(2,1)),
 (9, 'Stone floor', 10, 'This is cold, dirty stone floor. You do not like it.', point(2,2));
+
 
 
 INSERT INTO item (name, description) VALUES

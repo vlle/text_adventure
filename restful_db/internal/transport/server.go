@@ -45,6 +45,20 @@ func GetLocation(w http.ResponseWriter, r *http.Request) {
   w.Write(json_location)
 }
 
+func GetMap(w http.ResponseWriter, r *http.Request) {
+  locations, err := services.GetLocations()
+  if err.E != nil {
+    http.Error(w, http.StatusText(err.ProposedHttpCode()), err.ProposedHttpCode())
+    return 
+  }
+  json_locations, error := json.Marshal(locations)
+  if error != nil {
+    http.Error(w, err.Error(), http.StatusInternalServerError)
+    return
+  }
+  w.Write(json_locations)
+}
+
 func GetMonster(w http.ResponseWriter, r *http.Request) {
   id := chi.URLParam(r, "monster_id")
   i, error := strconv.Atoi(id)

@@ -14,7 +14,7 @@ func RouteItem(r chi.Router) {
 
 func RouteLocation(r chi.Router) {
   r.Get("/{location_id}", server.GetLocation)
-  // r.Post("/", server.CreateLocation)
+  r.Get("/map", server.GetMap)
 }
 
 func RouteMonster(r chi.Router) {
