@@ -20,6 +20,9 @@ func RouteGame(r chi.Router) {
   r.Post("/signup", transport.Signup)
   r.Post("/login", transport.Login)
 
+  r.Get("/healthcheck", func(w http.ResponseWriter, r *http.Request) {
+    w.Write([]byte("OK"))
+  })
   r.Get("/whereami", transport.Whereami)
   // r.Get("/items", transport.items)
   // r.Post("/use", transport.use)

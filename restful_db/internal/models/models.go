@@ -20,7 +20,6 @@ type Location struct {
   ImageID int `json:"image_id"`
 }
 
-
 type LocationIMG struct {
   ID int `json:"id"`
   Title string `json:"title"`

@@ -31,6 +31,7 @@ func RouteUser(r chi.Router) {
 func LaunchServer() {
   r := chi.NewRouter()
   r.Use(middleware.Logger)
+  r.Use(middleware.Recoverer)
   r.Route("/item", RouteItem)
   r.Route("/location", RouteLocation)
   r.Route("/user", RouteUser)
