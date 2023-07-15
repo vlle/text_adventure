@@ -60,20 +60,20 @@ func GetLocation(id int) (models.Location, SerivceError) {
   return location, SerivceError{}
 }
 
-func GetLocations() ([]models.Location, SerivceError) {
+func GetLocations() ([]models.LocationIMG, SerivceError) {
   dbpool, err := database.ConnectDatabase()
   if err != nil {
     log.Println(err)
-    return []models.Location{}, SerivceError{E: err, ProposedCode: 503} 
+    return []models.LocationIMG{}, SerivceError{E: err, ProposedCode: 503} 
   }
 
   locations, err := database.SelectLocations(dbpool)
   if err != nil {
     log.Println(err)
     if err.Error() == "no rows in result set" {
-     return []models.Location{}, SerivceError{E: err, ProposedCode: 404}
+     return []models.LocationIMG{}, SerivceError{E: err, ProposedCode: 404}
     }
-    return []models.Location{}, SerivceError{E: err, ProposedCode: 500}
+    return []models.LocationIMG{}, SerivceError{E: err, ProposedCode: 500}
   }
   return locations, SerivceError{}
 }

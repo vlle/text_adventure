@@ -48,10 +48,10 @@ func SelectLocation(conn *pgxpool.Pool, id int) (models.Location, error) {
   return l, nil
 }
 
-func SelectLocations(conn *pgxpool.Pool) ([]models.Location, error) {
-  var locations []models.Location
+func SelectLocations(conn *pgxpool.Pool) ([]models.LocationIMG, error) {
+  var locations []models.LocationIMG
   var point pgtype.Point
-  query := "SELECT id, title, description, coalesce(image_id, -1), xy FROM location"
+  query := "SELECT location.id, title, description, emoji, xy FROM location JOIN image ON location.image_id = image.id"
   rows, err := conn.Query(context.Background(), query)
   if err != nil {
     fmt.Fprintf(os.Stderr, "SelectLocations.Error: %v\n", err)
@@ -59,8 +59,8 @@ func SelectLocations(conn *pgxpool.Pool) ([]models.Location, error) {
   }
   defer rows.Close()
   for rows.Next() {
-    var l models.Location
-    err := rows.Scan(&l.ID, &l.Title, &l.Description, &l.ImageID, &point)
+    var l models.LocationIMG
+    err := rows.Scan(&l.ID, &l.Title, &l.Description, &l.Image, &point)
     l.XY.X = int(point.P.X)
     l.XY.Y = int(point.P.Y)
     if err != nil {
