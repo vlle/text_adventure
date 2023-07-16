@@ -1,4 +1,4 @@
-## Text-adventure game with HTTP requests based controls
+## Text-adventure game (microservice architecture (kinda))
 
 ![fantasy basement](img/fantasy-basement.jpeg?raw=true)
 
@@ -14,22 +14,13 @@ Note: for best expirience do not view database files from repo. They contain spo
 
 ### Self-host
 1. Clone the repository
-2. not implemented yet
+2.
 ```bash
 cd text_adventure
-docker-compose up
+./launch_server.sh
+go run ./cmd/client/client.go
 ```
-
-## Available commands
-(all not implemented yet)
-/whereami - show current location
-/go <direction> - go to direction
-/fight <enemy> - fight enemy
-/look - show current location description
-/look <object> - show object description
-/take <object> - take object
-/use <object> - use object
-/inv - show inventory
+3. Enjoy
 
 ## Tech stack
 - Go 1.20.1
@@ -39,4 +30,4 @@ docker-compose up
 
 ## Demo 
 - Video: not implemented yet
-- Try out: https://vlle.ru/text-adventure
+- Try out: https://vlle.ru/text-adventure (not implemented yet)
